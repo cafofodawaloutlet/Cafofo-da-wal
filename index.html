@@ -1,0 +1,1143 @@
+```html
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cafofo da Wal | Moda, Tendências & Lookbooks</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        serif: ['"Cormorant Garamond"', 'serif'],
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            red: '#B91C1C',
+                            redDark: '#991B1B',
+                            olive: '#556B2F',
+                            denim: '#1E3A8A',
+                            sand: '#F7F5F0',
+                            charcoal: '#1A1A1A'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #FAFAFA;
+            color: #1A1A1A;
+        }
+        .font-editorial {
+            font-family: 'Cormorant Garamond', serif;
+        }
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        .product-card:hover .product-img-secondary {
+            opacity: 1;
+        }
+        .product-img-secondary {
+            opacity: 0;
+            transition: opacity 0.4s ease-in-out;
+        }
+        .toast-enter {
+            transform: translateY(100%);
+            opacity: 0;
+        }
+        .toast-enter-active {
+            transform: translateY(0);
+            opacity: 1;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        
+        /* Custom scrollbar for cart */
+        #cartItemsContainer::-webkit-scrollbar {
+            width: 4px;
+        }
+        #cartItemsContainer::-webkit-scrollbar-thumb {
+            background-color: #e4e4e7;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body class="bg-[#FAFAFA] text-zinc-800 antialiased flex flex-col min-h-screen">
+
+    <!-- Top Announcement Bar -->
+    <div class="bg-black text-white text-xs py-2 text-center tracking-wider font-light">
+        FRETE GRÁTIS NAS COMPRAS ACIMA DE R$ 399 | PARCELAMENTO EM ATÉ 6X SEM JUROS
+    </div>
+
+    <!-- Sticky Navigation Header -->
+    <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-zinc-200 transition-all duration-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                
+                <!-- Mobile Menu Toggle -->
+                <button onclick="toggleMobileMenu()" class="lg:hidden p-2 text-zinc-700 hover:text-black focus:outline-none" aria-label="Abrir menu">
+                    <i class="fa-solid fa-bars text-xl"></i>
+                </button>
+
+                <!-- Brand Logo -->
+                <div class="flex-1 lg:flex-none text-center lg:text-left">
+                    <a href="#" onclick="navigateTo('home')" class="inline-block">
+                        <span class="font-editorial text-3xl sm:text-4xl tracking-wider font-bold text-zinc-900 uppercase">Cafofo da Wal</span>
+                        <span class="block text-[9px] uppercase tracking-[0.3em] text-zinc-500 text-center -mt-1">Moda & Estilo</span>
+                    </a>
+                </div>
+
+                <!-- Desktop Navigation Links -->
+                <nav class="hidden lg:flex space-x-8 text-sm font-medium tracking-wide">
+                    <button onclick="navigateTo('home')" class="nav-btn text-zinc-900 border-b-2 border-black pb-1 hover:text-red-700 transition" data-page="home">HOME</button>
+                    <button onclick="navigateTo('shop')" class="nav-btn text-zinc-600 hover:text-zinc-900 pb-1 transition" data-page="shop">CATÁLOGO</button>
+                    <button onclick="navigateTo('editorial')" class="nav-btn text-zinc-600 hover:text-zinc-900 pb-1 transition flex items-center gap-1.5" data-page="editorial">
+                        <span>O PODER DO VERMELHO</span>
+                        <span class="bg-red-100 text-red-700 text-[10px] font-bold px-1.5 py-0.5 rounded-full uppercase">Editorial</span>
+                    </button>
+                    <button onclick="navigateTo('about')" class="nav-btn text-zinc-600 hover:text-zinc-900 pb-1 transition" data-page="about">SOBRE</button>
+                </nav>
+
+                <!-- Right Utility Icons -->
+                <div class="flex items-center space-x-4">
+                    <div class="relative hidden sm:block">
+                        <input type="text" id="searchInput" oninput="handleSearch(this.value)" placeholder="Buscar looks, vestidos..." class="bg-zinc-100 text-xs rounded-full py-2 pl-8 pr-4 w-44 focus:outline-none focus:w-60 focus:bg-white focus:ring-1 focus:ring-black transition-all">
+                        <i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-zinc-400 text-xs"></i>
+                    </div>
+
+                    <button onclick="openCart()" class="relative p-2 text-zinc-800 hover:text-black" aria-label="Abrir sacola">
+                        <i class="fa-solid fa-bag-shopping text-xl"></i>
+                        <span id="cartCountBadge" class="absolute top-1 right-0 bg-red-600 text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center transition-all duration-300 scale-100">0</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Navigation Menu -->
+        <div id="mobileMenu" class="hidden lg:hidden bg-white border-b border-zinc-200 px-4 pt-2 pb-6 space-y-3 shadow-lg absolute w-full z-50">
+            <button onclick="navigateTo('home'); toggleMobileMenu()" class="block w-full text-left py-2 text-zinc-800 font-medium">Home</button>
+            <button onclick="navigateTo('shop'); toggleMobileMenu()" class="block w-full text-left py-2 text-zinc-800 font-medium">Catálogo de Roupas</button>
+            <button onclick="navigateTo('editorial'); toggleMobileMenu()" class="block w-full text-left py-2 text-red-700 font-bold flex items-center justify-between">
+                <span>Editorial: O Poder do Vermelho</span>
+                <i class="fa-solid fa-chevron-right text-xs"></i>
+            </button>
+            <button onclick="navigateTo('about'); toggleMobileMenu()" class="block w-full text-left py-2 text-zinc-800 font-medium">Sobre a Marca</button>
+            <div class="pt-2 relative">
+                <input type="text" oninput="handleSearch(this.value); if(this.value) navigateTo('shop');" placeholder="Buscar peças..." class="w-full bg-zinc-100 text-xs rounded-lg py-2.5 px-3 pl-8">
+                <i class="fa-solid fa-magnifying-glass absolute left-3 top-5 text-zinc-400 text-xs"></i>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT CONTAINER -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+        <!-- ========================================== -->
+        <!-- PAGE 1: HOME VIEW                          -->
+        <!-- ========================================== -->
+        <section id="page-home" class="page-view block space-y-10 animate-fade-in">
+            
+            <!-- Hero Banner -->
+            <div class="relative rounded-2xl overflow-hidden bg-zinc-900 text-white shadow-xl min-h-[380px] sm:min-h-[460px] flex items-center">
+                <img src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&w=1600&q=80" alt="Coleção Feminina" class="absolute inset-0 w-full h-full object-cover opacity-40">
+                <div class="relative z-10 p-6 sm:p-12 max-w-2xl">
+                    <span class="inline-block bg-white/20 backdrop-blur-md text-white text-xs px-3 py-1 rounded-full uppercase tracking-widest font-semibold mb-4">Nova Coleção Outono/Inverno</span>
+                    <h1 class="font-editorial text-4xl sm:text-6xl font-bold leading-tight mb-4">Elegância Sem Esforço & Alfaiataria Moderna</h1>
+                    <p class="text-zinc-200 text-sm sm:text-base mb-6 font-light">Explore nossas composições exclusivas inspiradas em tendências urbanas, estampas atemporais e a intensidade do vermelho.</p>
+                    <div class="flex flex-wrap gap-4">
+                        <button onclick="navigateTo('shop')" class="bg-white text-zinc-900 px-6 py-3 rounded-full font-semibold text-sm hover:bg-zinc-100 transition shadow-lg">Ver Coleção Completa</button>
+                        <button onclick="navigateTo('editorial')" class="bg-red-700 text-white px-6 py-3 rounded-full font-semibold text-sm hover:bg-red-800 transition shadow-lg flex items-center gap-2">
+                            <span>Especial "O Poder do Vermelho"</span>
+                            <i class="fa-solid fa-arrow-right text-xs"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Featured Collection Header -->
+            <div class="border-t border-zinc-200 pt-8">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+                    <div>
+                        <div class="flex items-center gap-2 text-zinc-500 text-xs font-semibold uppercase tracking-wider mb-1">
+                            <i class="fa-solid fa-sparkles text-zinc-700"></i>
+                            <span>Destaques da Coleção</span>
+                        </div>
+                        <h2 class="font-editorial text-3xl font-bold text-zinc-900">Lookbook & Tendências do Momento</h2>
+                    </div>
+                    <p class="text-xs text-zinc-500 max-w-sm">Toque nos cards abaixo para visualizar os detalhes das peças e adquirir os looks diretamente do catálogo.</p>
+                </div>
+
+                <!-- LOOKS GRID -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6" id="instagramGrid">
+                    
+                    <!-- Post 1: Macacão Oliva -->
+                    <div class="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-md transition border border-zinc-200 flex flex-col group">
+                        <div class="relative overflow-hidden aspect-[4/5] bg-zinc-100 cursor-pointer" onclick="openProductModal('p1')">
+                            <img src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=800&q=80" alt="Macacão Oliva Alfaiataria" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                            <div class="absolute top-3 right-3 bg-black/60 text-white text-[10px] px-2 py-1 rounded-full backdrop-blur-md">
+                                <i class="fa-solid fa-layer-group"></i> Look Completo
+                            </div>
+                        </div>
+                        <div class="p-4 flex flex-col flex-grow justify-between">
+                            <div>
+                                <span class="text-[11px] font-semibold text-emerald-800 uppercase tracking-wider">Alfaiataria Utilitária</span>
+                                <h3 class="font-editorial text-xl font-bold mt-1 text-zinc-900 cursor-pointer" onclick="openProductModal('p1')">Macacão Crepe Oliva Urban</h3>
+                                <p class="text-xs text-zinc-500 mt-1 line-clamp-2">Modelagem fluida com abotoamento frontal e caimento elegante para o dia e noite.</p>
+                            </div>
+                            <div class="mt-4 pt-3 border-t border-zinc-100 flex items-center justify-between">
+                                <span class="font-bold text-zinc-900">R$ 389,00</span>
+                                <button onclick="quickAddToCart('p1')" class="bg-zinc-900 hover:bg-black text-white text-xs px-3.5 py-2 rounded-lg font-medium transition flex items-center gap-1.5">
+                                    <i class="fa-solid fa-plus text-[10px]"></i> Adicionar
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Post 2: Conjunto Poá Satin Silk -->
+                    <div class="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-md transition border border-zinc-200 flex flex-col group">
+                        <div class="relative overflow-hidden aspect-[4/5] bg-zinc-100 cursor-pointer" onclick="openProductModal('p2')">
+                            <img src="https://images.unsplash.com/photo-1509631179647-0177331693ae?auto=format&fit=crop&w=800&q=80" alt="Conjunto Pijama Chic Poá" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                            <div class="absolute top-3 right-3 bg-black/60 text-white text-[10px] px-2 py-1 rounded-full backdrop-blur-md">
+                                <i class="fa-solid fa-sparkles"></i> Best-Seller
+                            </div>
+                        </div>
+                        <div class="p-4 flex flex-col flex-grow justify-between">
+                            <div>
+                                <span class="text-[11px] font-semibold text-zinc-600 uppercase tracking-wider">Satin Silk Chic</span>
+                                <h3 class="font-editorial text-xl font-bold mt-1 text-zinc-900 cursor-pointer" onclick="openProductModal('p2')">Conjunto Soft Poá Off-White</h3>
+                                <p class="text-xs text-zinc-500 mt-1 line-clamp-2">Estampa clássica de bolhas em tecido acetinado de alto conforto com calça pantalona.</p>
+                            </div>
+                            <div class="mt-4 pt-3 border-t border-zinc-100 flex items-center justify-between">
+                                <span class="font-bold text-zinc-900">R$ 420,00</span>
+                                <button onclick="quickAddToCart('p2')" class="bg-zinc-900 hover:bg-black text-white text-xs px-3.5 py-2 rounded-lg font-medium transition flex items-center gap-1.5">
+                                    <i class="fa-solid fa-plus text-[10px]"></i> Adicionar
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Post 3: Vestido Jeans Denim -->
+                    <div class="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-md transition border border-zinc-200 flex flex-col group">
+                        <div class="relative overflow-hidden aspect-[4/5] bg-zinc-100 cursor-pointer" onclick="openProductModal('p3')">
+                            <img src="https://images.unsplash.com/photo-1572804013309-59a88b7e92f1?auto=format&fit=crop&w=800&q=80" alt="Vestido Camisa Jeans" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                            <div class="absolute top-3 right-3 bg-blue-900/80 text-white text-[10px] px-2 py-1 rounded-full backdrop-blur-md">
+                                <i class="fa-solid fa-shirt"></i> Indigo Premium
+                            </div>
+                        </div>
+                        <div class="p-4 flex flex-col flex-grow justify-between">
+                            <div>
+                                <span class="text-[11px] font-semibold text-blue-800 uppercase tracking-wider">Jeans Atemporal</span>
+                                <h3 class="font-editorial text-xl font-bold mt-1 text-zinc-900 cursor-pointer" onclick="openProductModal('p3')">Vestido Chemise Jeans Midi</h3>
+                                <p class="text-xs text-zinc-500 mt-1 line-clamp-2">Abotoamento clássico, manga dobrável e cinto com fivela ajustável na cintura.</p>
+                            </div>
+                            <div class="mt-4 pt-3 border-t border-zinc-100 flex items-center justify-between">
+                                <span class="font-bold text-zinc-900">R$ 349,00</span>
+                                <button onclick="quickAddToCart('p3')" class="bg-zinc-900 hover:bg-black text-white text-xs px-3.5 py-2 rounded-lg font-medium transition flex items-center gap-1.5">
+                                    <i class="fa-solid fa-plus text-[10px]"></i> Adicionar
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Post 4: SPECIAL EDITORIAL - O PODER DO VERMELHO -->
+                    <div class="bg-gradient-to-br from-red-950 via-red-900 to-red-800 text-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition flex flex-col group relative">
+                        <div class="p-6 flex flex-col h-full justify-between relative z-10">
+                            <div>
+                                <span class="bg-white/20 text-white text-[10px] uppercase tracking-widest font-bold px-2.5 py-1 rounded-full inline-block mb-3">Guia de Estilo</span>
+                                <h3 class="font-editorial text-3xl font-bold tracking-tight text-white leading-tight">O PODER DO VERMELHO NOS SEUS LOOKS</h3>
+                                <p class="text-xs text-red-100 mt-2 font-light">Descubra 3 combinações poderosas com jaquetas, saias fluidas e tricôs listrados para destacar seu guarda-roupa.</p>
+                            </div>
+
+                            <div class="my-6 border-y border-white/20 py-4 space-y-2 text-xs">
+                                <div class="flex items-center gap-2 text-red-100">
+                                    <i class="fa-solid fa-check text-red-400"></i> Jaqueta Vermelha + Jeans Mom
+                                </div>
+                                <div class="flex items-center gap-2 text-red-100">
+                                    <i class="fa-solid fa-check text-red-400"></i> Camisa Azul + Saia Maxi Vermelha
+                                </div>
+                                <div class="flex items-center gap-2 text-red-100">
+                                    <i class="fa-solid fa-check text-red-400"></i> Tricô Listrado Bordo & Denim
+                                </div>
+                            </div>
+
+                            <button onclick="navigateTo('editorial')" class="w-full bg-white text-red-900 hover:bg-red-50 font-bold text-xs py-3 rounded-lg transition text-center shadow-lg uppercase tracking-wider">
+                                Explore o Editorial
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Highlight Categories Banner -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 pt-6">
+                <div onclick="navigateTo('shop', 'alfaiataria')" class="relative rounded-xl overflow-hidden h-64 group cursor-pointer shadow-sm">
+                    <img src="https://images.unsplash.com/photo-1539109136881-3be0616acf4b?auto=format&fit=crop&w=800&q=80" alt="Alfaiataria" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex items-end p-6">
+                        <div>
+                            <h3 class="font-editorial text-2xl text-white font-bold">Alfaiataria Elegante</h3>
+                            <p class="text-xs text-zinc-300">Blazers, Macacões & Pantalonas</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div onclick="navigateTo('shop', 'vermelhos')" class="relative rounded-xl overflow-hidden h-64 group cursor-pointer shadow-sm">
+                    <img src="https://images.unsplash.com/photo-1529139574466-a303027c1d8b?auto=format&fit=crop&w=800&q=80" alt="Coleção Vermelhos" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                    <div class="absolute inset-0 bg-gradient-to-t from-red-950/90 via-red-900/30 to-transparent flex items-end p-6">
+                        <div>
+                            <h3 class="font-editorial text-2xl text-white font-bold">Coleção Vermelhos</h3>
+                            <p class="text-xs text-zinc-200">Vibração, Paixão & Atitude</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div onclick="navigateTo('shop', 'jeans')" class="relative rounded-xl overflow-hidden h-64 group cursor-pointer shadow-sm">
+                    <img src="https://images.unsplash.com/photo-1541099649105-f69ad21f3246?auto=format&fit=crop&w=800&q=80" alt="Jeans Premium" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex items-end p-6">
+                        <div>
+                            <h3 class="font-editorial text-2xl text-white font-bold">Jeans Premium</h3>
+                            <p class="text-xs text-zinc-300">Chemises, Wide Leg & Jaquetas</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Newsletter VIP -->
+            <div class="bg-zinc-100 rounded-2xl p-8 sm:p-12 text-center max-w-3xl mx-auto border border-zinc-200">
+                <i class="fa-regular fa-envelope text-3xl text-zinc-700 mb-3"></i>
+                <h3 class="font-editorial text-3xl font-bold text-zinc-900">Receba Nossos Editoriais de Moda</h3>
+                <p class="text-xs text-zinc-600 mt-2 max-w-md mx-auto">Cadastre-se para receber em primeira mão novos lançamentos, cupons exclusivos e dicas de estilo direto na sua caixa de entrada.</p>
+                <form onsubmit="handleSubscribe(event)" class="mt-6 flex flex-col sm:flex-row gap-2 max-w-md mx-auto">
+                    <input type="email" required placeholder="Seu e-mail preferido..." class="flex-grow px-4 py-3 text-xs rounded-lg border border-zinc-300 focus:outline-none focus:ring-1 focus:ring-black">
+                    <button type="submit" class="bg-zinc-900 text-white text-xs font-semibold px-6 py-3 rounded-lg hover:bg-black transition">Cadastrar</button>
+                </form>
+            </div>
+
+        </section>
+
+        <!-- ========================================== -->
+        <!-- PAGE 2: SHOP / CATALOG VIEW                -->
+        <!-- ========================================== -->
+        <section id="page-shop" class="page-view hidden space-y-8 animate-fade-in">
+            <div class="border-b border-zinc-200 pb-6 flex flex-col md:flex-row md:items-end justify-between gap-4">
+                <div>
+                    <h1 class="font-editorial text-4xl font-bold text-zinc-900">Catálogo de Roupas</h1>
+                    <p class="text-xs text-zinc-500 mt-1">Explore nossa seleção exclusiva com acabamento impecável e tecidos nobres.</p>
+                </div>
+
+                <!-- Category Tabs -->
+                <div class="flex items-center gap-2 overflow-x-auto hide-scrollbar pb-2 md:pb-0">
+                    <button onclick="filterCategory('all')" class="cat-tab bg-zinc-900 text-white text-xs font-semibold px-4 py-2 rounded-full whitespace-nowrap" data-cat="all">Todos os Lookbooks</button>
+                    <button onclick="filterCategory('vermelhos')" class="cat-tab bg-zinc-100 text-zinc-700 hover:bg-zinc-200 text-xs font-semibold px-4 py-2 rounded-full whitespace-nowrap" data-cat="vermelhos">Especial Vermelho</button>
+                    <button onclick="filterCategory('alfaiataria')" class="cat-tab bg-zinc-100 text-zinc-700 hover:bg-zinc-200 text-xs font-semibold px-4 py-2 rounded-full whitespace-nowrap" data-cat="alfaiataria">Alfaiataria</button>
+                    <button onclick="filterCategory('jeans')" class="cat-tab bg-zinc-100 text-zinc-700 hover:bg-zinc-200 text-xs font-semibold px-4 py-2 rounded-full whitespace-nowrap" data-cat="jeans">Jeans Chic</button>
+                    <button onclick="filterCategory('conjuntos')" class="cat-tab bg-zinc-100 text-zinc-700 hover:bg-zinc-200 text-xs font-semibold px-4 py-2 rounded-full whitespace-nowrap" data-cat="conjuntos">Conjuntos</button>
+                </div>
+            </div>
+
+            <!-- Product Grid -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6" id="catalogGrid">
+                <!-- Products rendered dynamically via JS -->
+            </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- PAGE 3: EDITORIAL - O PODER DO VERMELHO    -->
+        <!-- ========================================== -->
+        <section id="page-editorial" class="page-view hidden space-y-12 animate-fade-in">
+            
+            <!-- Editorial Header Banner -->
+            <div class="text-center max-w-3xl mx-auto space-y-4 border-b border-zinc-200 pb-10">
+                <span class="bg-red-100 text-red-800 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-widest">Editorial de Estilo</span>
+                <h1 class="font-editorial text-5xl sm:text-6xl font-bold text-zinc-900 tracking-tight">O PODER DO VERMELHO NOS SEUS LOOKS</h1>
+                <p class="text-sm text-zinc-600 font-light leading-relaxed">
+                    O vermelho é a cor que transforma qualquer produção básica em uma declaração de presença e sofisticação. 
+                    Confira como harmonizar peças quentes com jeans contemporâneo e alfaiataria impecável.
+                </p>
+            </div>
+
+            <!-- Editorial Feature Breakdown -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                
+                <!-- Look 1: Jaqueta Vermelha -->
+                <div class="bg-white rounded-2xl border border-zinc-200 overflow-hidden shadow-sm hover:shadow-md transition">
+                    <div class="relative aspect-[3/4] bg-zinc-100 cursor-pointer" onclick="openProductModal('p4')">
+                        <img src="https://images.unsplash.com/photo-1529139574466-a303027c1d8b?auto=format&fit=crop&w=800&q=80" alt="Jaqueta Suede" class="w-full h-full object-cover">
+                        <div class="absolute bottom-4 left-4 bg-white/90 backdrop-blur-md px-3 py-1.5 rounded-lg text-xs font-bold text-zinc-900">
+                            Look 01 • Casual Chic
+                        </div>
+                    </div>
+                    <div class="p-6 space-y-4">
+                        <h3 class="font-editorial text-2xl font-bold text-zinc-900">1. Jaqueta Suede Vermelha & Jeans Wide</h3>
+                        <p class="text-xs text-zinc-600 leading-relaxed">
+                            Uma terceira peça vibrante eleva o combo clássico de regata neutra e calça jeans. O corte estruturado traz equilíbrio e modernidade.
+                        </p>
+                        <div class="border-t border-zinc-100 pt-4 flex items-center justify-between">
+                            <div>
+                                <p class="text-[10px] text-zinc-400 uppercase font-semibold">Peça em Destaque</p>
+                                <p class="text-sm font-bold text-zinc-900">Jaqueta Suede Vermelho Vibração</p>
+                                <p class="text-xs text-red-700 font-semibold">R$ 299,00</p>
+                            </div>
+                            <button onclick="quickAddToCart('p4')" class="bg-red-700 hover:bg-red-800 text-white text-xs px-4 py-2.5 rounded-lg font-medium transition">
+                                <i class="fa-solid fa-cart-shopping mr-1"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Look 2: Camisa Azul & Saia Vermelha -->
+                <div class="bg-white rounded-2xl border border-zinc-200 overflow-hidden shadow-sm hover:shadow-md transition">
+                    <div class="relative aspect-[3/4] bg-zinc-100 cursor-pointer" onclick="openProductModal('p5')">
+                        <img src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=800&q=80" alt="Saia Vermelha" class="w-full h-full object-cover">
+                        <div class="absolute bottom-4 left-4 bg-white/90 backdrop-blur-md px-3 py-1.5 rounded-lg text-xs font-bold text-zinc-900">
+                            Look 02 • Contraste Sofisticado
+                        </div>
+                    </div>
+                    <div class="p-6 space-y-4">
+                        <h3 class="font-editorial text-2xl font-bold text-zinc-900">2. Camisa Azul Serenity & Saia Maxi Vermelha</h3>
+                        <p class="text-xs text-zinc-600 leading-relaxed">
+                            A combinação entre azul sereno e a saia longa vermelha cria um bloco de cores elegante, ideal para reuniões, eventos e finais de semana.
+                        </p>
+                        <div class="border-t border-zinc-100 pt-4 flex items-center justify-between">
+                            <div>
+                                <p class="text-[10px] text-zinc-400 uppercase font-semibold">Peça em Destaque</p>
+                                <p class="text-sm font-bold text-zinc-900">Saia Longa Plissada Vermelha</p>
+                                <p class="text-xs text-red-700 font-semibold">R$ 259,00</p>
+                            </div>
+                            <button onclick="quickAddToCart('p5')" class="bg-red-700 hover:bg-red-800 text-white text-xs px-4 py-2.5 rounded-lg font-medium transition">
+                                <i class="fa-solid fa-cart-shopping mr-1"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Look 3: Listrado Vermelho & Branco -->
+                <div class="bg-white rounded-2xl border border-zinc-200 overflow-hidden shadow-sm hover:shadow-md transition">
+                    <div class="relative aspect-[3/4] bg-zinc-100 cursor-pointer" onclick="openProductModal('p6')">
+                        <img src="https://images.unsplash.com/photo-1485230895905-ec40ba36b9bc?auto=format&fit=crop&w=800&q=80" alt="Tricô Listrado" class="w-full h-full object-cover">
+                        <div class="absolute bottom-4 left-4 bg-white/90 backdrop-blur-md px-3 py-1.5 rounded-lg text-xs font-bold text-zinc-900">
+                            Look 03 • French Girl Style
+                        </div>
+                    </div>
+                    <div class="p-6 space-y-4">
+                        <h3 class="font-editorial text-2xl font-bold text-zinc-900">3. Blusa Tricô Listrada Vermelho & Off-White</h3>
+                        <p class="text-xs text-zinc-600 leading-relaxed">
+                            O clássico navy reinventado nas tonalidades de vermelho. Perfeito para usar com calça jeans reta, sapatilhas e acessórios em tom terroso.
+                        </p>
+                        <div class="border-t border-zinc-100 pt-4 flex items-center justify-between">
+                            <div>
+                                <p class="text-[10px] text-zinc-400 uppercase font-semibold">Peça em Destaque</p>
+                                <p class="text-sm font-bold text-zinc-900">Tricô Listrado Bordo Premium</p>
+                                <p class="text-xs text-red-700 font-semibold">R$ 189,00</p>
+                            </div>
+                            <button onclick="quickAddToCart('p6')" class="bg-red-700 hover:bg-red-800 text-white text-xs px-4 py-2.5 rounded-lg font-medium transition">
+                                <i class="fa-solid fa-cart-shopping mr-1"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Interactive Hotspot Shoppable Look Section -->
+            <div class="bg-red-50 rounded-2xl p-8 border border-red-200 flex flex-col md:flex-row items-center justify-between gap-6">
+                <div class="space-y-2 text-center md:text-left">
+                    <span class="text-[10px] bg-red-200 text-red-900 font-bold px-2 py-1 rounded uppercase">Combo Promocional</span>
+                    <h3 class="font-editorial text-3xl font-bold text-red-950">Gostou das 3 combinações de Vermelho?</h3>
+                    <p class="text-xs text-red-800 max-w-xl">Leve qualquer peça da coleção "O Poder do Vermelho" e ganhe 15% de desconto acumulativo usando o cupom no carrinho.</p>
+                </div>
+                <button onclick="applyEditorialCoupon()" class="bg-red-700 text-white hover:bg-red-800 px-6 py-3.5 rounded-xl font-bold text-xs uppercase tracking-wider shadow-md whitespace-nowrap transition">
+                    Copiar Cupom: VERMELHO15
+                </button>
+            </div>
+
+        </section>
+
+        <!-- ========================================== -->
+        <!-- PAGE 4: ABOUT & CONTACT VIEW               -->
+        <!-- ========================================== -->
+        <section id="page-about" class="page-view hidden space-y-12 animate-fade-in">
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+                <div class="space-y-6">
+                    <span class="text-xs font-bold text-zinc-500 uppercase tracking-widest">Nossa História</span>
+                    <h1 class="font-editorial text-4xl sm:text-5xl font-bold text-zinc-900 leading-tight">Moda atemporal desenhada para mulheres autênticas.</h1>
+                    <p class="text-sm text-zinc-600 leading-relaxed">
+                        O <strong class="text-zinc-800">Cafofo da Wal</strong> nasceu do desejo de unir a sofisticação da alfaiataria clássica à versatilidade do dia a dia. Nossas peças são pensadas minuciosamente, desde a escolha dos tecidos até os acabamentos finais.
+                    </p>
+                    <p class="text-sm text-zinc-600 leading-relaxed">
+                        Acreditamos no poder do vestuário para traduzir confiança. Nossos editoriais, como "O Poder do Vermelho", buscam inspirar composições criativas e atemporais para que você se sinta confiante em qualquer ocasião.
+                    </p>
+                    <div class="pt-2 flex items-center gap-6 text-zinc-800">
+                        <div>
+                            <p class="font-editorial text-3xl font-bold">100%</p>
+                            <p class="text-[11px] text-zinc-500">Design Nacional</p>
+                        </div>
+                        <div class="h-8 w-px bg-zinc-300"></div>
+                        <div>
+                            <p class="font-editorial text-3xl font-bold">+15k</p>
+                            <p class="text-[11px] text-zinc-500">Clientes Encantadas</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="relative rounded-2xl overflow-hidden shadow-lg aspect-square">
+                    <img src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&w=1000&q=80" alt="Boutique Studio" class="w-full h-full object-cover">
+                </div>
+            </div>
+
+            <!-- Contact & Atendimento WhatsApp -->
+            <div class="bg-zinc-900 text-white rounded-2xl p-8 sm:p-12 grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="space-y-2">
+                    <i class="fa-brands fa-whatsapp text-3xl text-emerald-400"></i>
+                    <h3 class="font-editorial text-2xl font-bold">Atendimento VIP</h3>
+                    <p class="text-xs text-zinc-400">Precisa de ajuda com tamanhos ou styling personalizado?</p>
+                    <a href="https://wa.me/5511999999999" target="_blank" class="inline-block mt-2 text-xs text-emerald-400 font-bold hover:underline">Conversar no WhatsApp &rarr;</a>
+                </div>
+
+                <div class="space-y-2">
+                    <i class="fa-solid fa-store text-3xl text-zinc-300"></i>
+                    <h3 class="font-editorial text-2xl font-bold">Showroom Presencial</h3>
+                    <p class="text-xs text-zinc-400">Rua Oscar Freire, 1020 - Jardins, São Paulo / SP</p>
+                    <p class="text-xs text-zinc-400">Seg. a Sáb. das 10h às 19h</p>
+                </div>
+
+                <div class="space-y-2">
+                    <i class="fa-solid fa-truck-fast text-3xl text-zinc-300"></i>
+                    <h3 class="font-editorial text-2xl font-bold">Envio para todo Brasil</h3>
+                    <p class="text-xs text-zinc-400">Entrega rápida com rastreio em tempo real e primeira troca grátis.</p>
+                </div>
+            </div>
+
+        </section>
+
+    </main>
+
+    <!-- ========================================== -->
+    <!-- PRODUCT DETAIL QUICK VIEW MODAL            -->
+    <!-- ========================================== -->
+    <div id="productModal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm hidden flex items-center justify-center p-4 transition-opacity" onclick="closeModalOnOutsideClick(event)">
+        <div class="bg-white rounded-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto shadow-2xl relative flex flex-col md:flex-row transform transition-transform scale-95" id="productModalContent">
+            
+            <button onclick="closeProductModal()" class="absolute top-4 right-4 z-10 bg-white/80 rounded-full w-8 h-8 flex items-center justify-center text-zinc-700 hover:bg-black hover:text-white transition shadow-sm" aria-label="Fechar modal">
+                <i class="fa-solid fa-xmark text-sm"></i>
+            </button>
+
+            <!-- Product Image -->
+            <div class="md:w-1/2 bg-zinc-100">
+                <img id="modalProductImg" src="" alt="Produto" class="w-full h-full object-cover min-h-[300px] md:min-h-[450px]">
+            </div>
+
+            <!-- Product Details -->
+            <div class="md:w-1/2 p-6 md:p-8 flex flex-col justify-between space-y-6">
+                <div>
+                    <span id="modalProductTag" class="text-[10px] font-bold text-red-700 uppercase tracking-widest"></span>
+                    <h2 id="modalProductTitle" class="font-editorial text-3xl font-bold text-zinc-900 mt-1"></h2>
+                    <p id="modalProductPrice" class="text-2xl font-bold text-zinc-900 mt-2"></p>
+                    
+                    <p id="modalProductDesc" class="text-xs text-zinc-600 mt-4 leading-relaxed"></p>
+
+                    <!-- Size Selector -->
+                    <div class="mt-6">
+                        <div class="flex justify-between items-end mb-2">
+                            <label class="block text-xs font-semibold text-zinc-700">Tamanho Disponível:</label>
+                            <a href="#" class="text-[10px] text-zinc-500 underline hover:text-black">Guia de Medidas</a>
+                        </div>
+                        <div class="flex gap-2" id="sizeSelectorContainer">
+                            <button onclick="selectSize('P', this)" class="size-btn w-10 h-10 border border-zinc-300 rounded-lg text-xs font-semibold hover:border-black transition text-zinc-700">P</button>
+                            <button onclick="selectSize('M', this)" class="size-btn w-10 h-10 border border-black bg-black text-white rounded-lg text-xs font-semibold transition">M</button>
+                            <button onclick="selectSize('G', this)" class="size-btn w-10 h-10 border border-zinc-300 rounded-lg text-xs font-semibold hover:border-black transition text-zinc-700">G</button>
+                            <button onclick="selectSize('GG', this)" class="size-btn w-10 h-10 border border-zinc-300 rounded-lg text-xs font-semibold hover:border-black transition text-zinc-700">GG</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="space-y-3 pt-4 border-t border-zinc-100">
+                    <button id="modalAddBtn" class="w-full bg-zinc-900 hover:bg-black text-white font-bold py-3.5 rounded-xl text-xs uppercase tracking-wider transition flex items-center justify-center gap-2 shadow-md">
+                        <i class="fa-solid fa-bag-shopping"></i>
+                        <span>Adicionar à Sacola</span>
+                    </button>
+                    <p class="text-[11px] text-zinc-400 text-center flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-shield-halved text-xs text-emerald-600"></i> Compra 100% Segura • Primeira Troca Grátis
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- SLIDE-OVER SHOPPING CART DRAWER            -->
+    <!-- ========================================== -->
+    <div id="cartDrawer" class="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm hidden transition-opacity" onclick="closeCartOnOutsideClick(event)">
+        <div class="absolute inset-y-0 right-0 max-w-md w-full bg-white shadow-2xl flex flex-col justify-between transform transition-transform translate-x-full duration-300" id="cartDrawerContent">
+            
+            <!-- Cart Header -->
+            <div class="p-5 border-b border-zinc-200 flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                    <i class="fa-solid fa-bag-shopping text-zinc-800"></i>
+                    <h2 class="font-editorial text-2xl font-bold text-zinc-900">Sua Sacola</h2>
+                </div>
+                <button onclick="closeCart()" class="p-2 text-zinc-500 hover:text-black bg-zinc-100 rounded-full w-8 h-8 flex items-center justify-center transition">
+                    <i class="fa-solid fa-xmark text-sm"></i>
+                </button>
+            </div>
+
+            <!-- Cart Items List -->
+            <div id="cartItemsContainer" class="flex-grow p-5 overflow-y-auto space-y-4">
+                <!-- Cart items rendered dynamically -->
+            </div>
+
+            <!-- Cart Footer -->
+            <div class="p-5 border-t border-zinc-200 bg-zinc-50 space-y-4">
+                
+                <!-- Promo Code -->
+                <div class="flex gap-2">
+                    <input type="text" id="couponInput" placeholder="Possui cupom?" class="flex-grow bg-white border border-zinc-300 rounded-lg text-xs px-3 py-2 uppercase focus:outline-none focus:border-black">
+                    <button onclick="applyCoupon()" class="bg-zinc-800 hover:bg-black text-white text-xs font-semibold px-4 py-2 rounded-lg transition">Aplicar</button>
+                </div>
+
+                <div class="space-y-1.5 text-xs">
+                    <div class="flex justify-between text-zinc-600">
+                        <span>Subtotal</span>
+                        <span id="cartSubtotal">R$ 0,00</span>
+                    </div>
+                    <div class="flex justify-between text-zinc-600">
+                        <span>Desconto <span id="activeCouponLabel" class="text-[10px] bg-red-100 text-red-700 px-1.5 rounded hidden"></span></span>
+                        <span id="cartDiscount" class="text-emerald-700 font-medium">- R$ 0,00</span>
+                    </div>
+                    <div class="flex justify-between text-zinc-600">
+                        <span>Frete</span>
+                        <span class="text-emerald-700 font-medium">Grátis</span>
+                    </div>
+                    <div class="flex justify-between text-base font-bold text-zinc-900 pt-2 border-t border-zinc-200">
+                        <span>Total</span>
+                        <span id="cartTotal">R$ 0,00</span>
+                    </div>
+                </div>
+
+                <button onclick="checkout()" class="w-full bg-red-700 hover:bg-red-800 text-white font-bold py-3.5 rounded-xl text-xs uppercase tracking-wider shadow-lg transition">
+                    Finalizar Compra
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification Toast -->
+    <div id="toast" class="fixed bottom-6 right-6 z-50 bg-zinc-900 text-white px-5 py-3 rounded-xl shadow-2xl flex items-center gap-3 hidden transition-all duration-300">
+        <i class="fa-solid fa-circle-check text-emerald-400 text-lg"></i>
+        <span id="toastMsg" class="text-xs font-medium">Produto adicionado à sacola!</span>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-zinc-900 text-zinc-400 text-xs border-t border-zinc-800 mt-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+            <div class="space-y-3">
+                <span class="font-editorial text-2xl font-bold text-white tracking-wider">Cafofo da Wal</span>
+                <p class="text-zinc-500 leading-relaxed">Referência em alfaiataria feminina, moda casual chic e editoriais de estilo inspiradores.</p>
+            </div>
+
+            <div>
+                <h4 class="text-white font-bold uppercase tracking-wider mb-3">Navegação</h4>
+                <ul class="space-y-2">
+                    <li><a href="#" onclick="navigateTo('home')" class="hover:text-white transition">Home</a></li>
+                    <li><a href="#" onclick="navigateTo('shop')" class="hover:text-white transition">Catálogo de Roupas</a></li>
+                    <li><a href="#" onclick="navigateTo('editorial')" class="hover:text-white transition">Especial O Poder do Vermelho</a></li>
+                    <li><a href="#" onclick="navigateTo('about')" class="hover:text-white transition">Sobre a Marca</a></li>
+                </ul>
+            </div>
+
+            <div>
+                <h4 class="text-white font-bold uppercase tracking-wider mb-3">Ajuda & Suporte</h4>
+                <ul class="space-y-2">
+                    <li><a href="#" class="hover:text-white transition">Guia de Tamanhos</a></li>
+                    <li><a href="#" class="hover:text-white transition">Política de Troca & Devolução</a></li>
+                    <li><a href="#" class="hover:text-white transition">Prazos de Entrega</a></li>
+                    <li><a href="#" class="hover:text-white transition">Perguntas Frequentes</a></li>
+                </ul>
+            </div>
+
+            <div>
+                <h4 class="text-white font-bold uppercase tracking-wider mb-3">Siga-nos</h4>
+                <div class="flex space-x-4 text-lg">
+                    <a href="#" class="w-9 h-9 bg-zinc-800 rounded-full flex items-center justify-center text-white hover:bg-black transition" aria-label="TikTok"><i class="fa-brands fa-tiktok"></i></a>
+                    <a href="#" class="w-9 h-9 bg-zinc-800 rounded-full flex items-center justify-center text-white hover:bg-emerald-600 transition" aria-label="WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
+                </div>
+            </div>
+        </div>
+
+        <div class="border-t border-zinc-800 py-6 text-center text-zinc-600 text-[11px]">
+            &copy; 2026 Cafofo da Wal - Moda & Lookbook. Todos os direitos reservados.
+        </div>
+    </footer>
+
+    <script>
+        // Database of products matching the user's reference look & theme
+        const products = [
+            {
+                id: 'p1', title: 'Macacão Crepe Oliva Urban', category: 'alfaiataria', price: 389.00, tag: 'Alfaiataria Utilitária',
+                image: 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=800&q=80',
+                description: 'Macacão em crepe estruturado com tom verde oliva, gola colarinho, bolsos funcionais e caimento reto com faixa para amarração.'
+            },
+            {
+                id: 'p2', title: 'Conjunto Soft Poá Off-White', category: 'conjuntos', price: 420.00, tag: 'Satin Silk Chic',
+                image: 'https://images.unsplash.com/photo-1509631179647-0177331693ae?auto=format&fit=crop&w=800&q=80',
+                description: 'Conjunto estilo pijama chic com blusa de manga longa abotoada e calça pantalona em tecido fluído acetinado com estampa poá clássica.'
+            },
+            {
+                id: 'p3', title: 'Vestido Chemise Jeans Midi', category: 'jeans', price: 349.00, tag: 'Indigo Premium',
+                image: 'https://images.unsplash.com/photo-1572804013309-59a88b7e92f1?auto=format&fit=crop&w=800&q=80',
+                description: 'Vestido jeans indigo midi com botões frontais, mangas dobráveis ajustáveis e cinto com fivela ajustável que valoriza a cintura.'
+            },
+            {
+                id: 'p4', title: 'Jaqueta Suede Vermelho Vibração', category: 'vermelhos', price: 299.00, tag: 'O Poder do Vermelho',
+                image: 'https://images.unsplash.com/photo-1529139574466-a303027c1d8b?auto=format&fit=crop&w=800&q=80',
+                description: 'Jaqueta estruturada em toque macio de suede tom vermelho intenso. Ideal para sobreposições modernas com jeans e peças neutras.'
+            },
+            {
+                id: 'p5', title: 'Saia Longa Plissada Vermelha', category: 'vermelhos', price: 259.00, tag: 'O Poder do Vermelho',
+                image: 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=800&q=80',
+                description: 'Saia maxi fluida com plissado delicado em tom vermelho carmim. Traz movimento e sofisticação em combinações com camisa azul ou regatas.'
+            },
+            {
+                id: 'p6', title: 'Tricô Listrado Bordo Premium', category: 'vermelhos', price: 189.00, tag: 'O Poder do Vermelho',
+                image: 'https://images.unsplash.com/photo-1485230895905-ec40ba36b9bc?auto=format&fit=crop&w=800&q=80',
+                description: 'Blusa em tricot macio com listras horizontais em tom vermelho escuro e off-white, caimento perfeito para dias de meia estação.'
+            },
+            {
+                id: 'p7', title: 'Camisa Alfaiataria Azul Serenity', category: 'alfaiataria', price: 219.00, tag: 'Alfaiataria Leve',
+                image: 'https://images.unsplash.com/photo-1598554747436-c9293d6a588f?auto=format&fit=crop&w=800&q=80',
+                description: 'Camisa social clássica em tricoline de algodão tom azul sereno. Combina perfeitamente com calças de alfaiataria ou saias vermelhas.'
+            },
+            {
+                id: 'p8', title: 'Calça Jeans Wide Leg Mom', category: 'jeans', price: 279.00, tag: 'Jeans Chic',
+                image: 'https://images.unsplash.com/photo-1541099649105-f69ad21f3246?auto=format&fit=crop&w=800&q=80',
+                description: 'Calça jeans cintura alta com modelagem reta wide leg e lavagem média contemporânea com acabamento impecável.'
+            }
+        ];
+
+        // Shopping Cart State
+        let cart = JSON.parse(localStorage.getItem('cafofo_cart')) || [];
+        let discountPercent = parseInt(localStorage.getItem('cafofo_discount')) || 0;
+        let activeCoupon = localStorage.getItem('cafofo_coupon') || '';
+        let currentModalSize = 'M';
+
+        // Navigation Controller
+        function navigateTo(pageId, filterCat = null) {
+            document.querySelectorAll('.page-view').forEach(p => {
+                p.classList.add('hidden');
+                p.classList.remove('animate-fade-in');
+            });
+            
+            const targetPage = document.getElementById('page-' + pageId);
+            if (targetPage) {
+                targetPage.classList.remove('hidden');
+                // trigger reflow for animation
+                void targetPage.offsetWidth; 
+                targetPage.classList.add('animate-fade-in');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+
+            // Update Nav Active State
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                if (btn.getAttribute('data-page') === pageId) {
+                    btn.classList.add('text-zinc-900', 'border-b-2', 'border-black');
+                    btn.classList.remove('text-zinc-600');
+                } else {
+                    btn.classList.remove('text-zinc-900', 'border-b-2', 'border-black');
+                    btn.classList.add('text-zinc-600');
+                }
+            });
+
+            if (pageId === 'shop') {
+                renderCatalog(filterCat || 'all');
+            }
+        }
+
+        // Render Catalog Grid
+        function renderCatalog(category = 'all') {
+            const catalogContainer = document.getElementById('catalogGrid');
+            if (!catalogContainer) return;
+
+            // Highlight Active Tab
+            document.querySelectorAll('.cat-tab').forEach(tab => {
+                if (tab.getAttribute('data-cat') === category) {
+                    tab.classList.replace('bg-zinc-100', 'bg-zinc-900');
+                    tab.classList.replace('text-zinc-700', 'text-white');
+                } else {
+                    tab.classList.replace('bg-zinc-900', 'bg-zinc-100');
+                    tab.classList.replace('text-white', 'text-zinc-700');
+                }
+            });
+
+            const filtered = category === 'all' 
+                ? products 
+                : products.filter(p => p.category === category);
+
+            catalogContainer.innerHTML = filtered.map(p => `
+                <div class="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-md transition border border-zinc-200 flex flex-col group animate-fade-in">
+                    <div class="relative overflow-hidden aspect-[4/5] bg-zinc-100 cursor-pointer" onclick="openProductModal('${p.id}')">
+                        <img src="${p.image}" alt="${p.title}" class="w-full h-full object-cover group-hover:scale-105 transition duration-700">
+                        <div class="absolute top-3 right-3 bg-white/90 text-zinc-900 text-[10px] font-bold px-2 py-1 rounded-full shadow-sm uppercase tracking-wider">
+                            ${p.tag}
+                        </div>
+                    </div>
+                    <div class="p-4 flex flex-col flex-grow justify-between">
+                        <div>
+                            <h3 class="font-editorial text-xl font-bold mt-1 text-zinc-900 cursor-pointer" onclick="openProductModal('${p.id}')">${p.title}</h3>
+                            <p class="text-xs text-zinc-500 mt-1 line-clamp-2">${p.description}</p>
+                        </div>
+                        <div class="mt-4 pt-3 border-t border-zinc-100 flex items-center justify-between">
+                            <span class="font-bold text-zinc-900">R$ ${p.price.toFixed(2).replace('.', ',')}</span>
+                            <button onclick="quickAddToCart('${p.id}')" class="bg-zinc-900 hover:bg-black text-white text-xs px-3.5 py-2 rounded-lg font-medium transition flex items-center gap-1.5">
+                                <i class="fa-solid fa-plus text-[10px]"></i> Adicionar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function filterCategory(cat) {
+            renderCatalog(cat);
+        }
+
+        // Modal Controls
+        function openProductModal(id) {
+            const product = products.find(p => p.id === id);
+            if (!product) return;
+
+            document.getElementById('modalProductImg').src = product.image;
+            document.getElementById('modalProductTitle').innerText = product.title;
+            document.getElementById('modalProductPrice').innerText = 'R$ ' + product.price.toFixed(2).replace('.', ',');
+            document.getElementById('modalProductDesc').innerText = product.description;
+            document.getElementById('modalProductTag').innerText = product.tag;
+
+            // Reset size selection to M by default
+            const defaultBtn = document.querySelectorAll('#sizeSelectorContainer button')[1];
+            selectSize('M', defaultBtn);
+
+            document.getElementById('modalAddBtn').onclick = () => {
+                addToCart(product.id, currentModalSize);
+                closeProductModal();
+            };
+
+            const modal = document.getElementById('productModal');
+            const content = document.getElementById('productModalContent');
+            modal.classList.remove('hidden');
+            // Small delay to allow CSS transition to apply
+            setTimeout(() => {
+                content.classList.remove('scale-95');
+                content.classList.add('scale-100');
+            }, 10);
+        }
+
+        function closeProductModal() {
+            const modal = document.getElementById('productModal');
+            const content = document.getElementById('productModalContent');
+            content.classList.remove('scale-100');
+            content.classList.add('scale-95');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 200);
+        }
+
+        function closeModalOnOutsideClick(event) {
+            if (event.target.id === 'productModal') {
+                closeProductModal();
+            }
+        }
+
+        function selectSize(size, btnElement) {
+            currentModalSize = size;
+            document.querySelectorAll('.size-btn').forEach(btn => {
+                btn.className = "size-btn w-10 h-10 border border-zinc-300 rounded-lg text-xs font-semibold hover:border-black transition text-zinc-700";
+            });
+            btnElement.className = "size-btn w-10 h-10 border border-black bg-black text-white rounded-lg text-xs font-semibold transition";
+        }
+
+        // Shopping Cart Logic
+        function quickAddToCart(id) {
+            // Defaulting to size 'M' if added directly from grid
+            addToCart(id, 'M');
+        }
+
+        function addToCart(id, size) {
+            const product = products.find(p => p.id === id);
+            if (!product) return;
+
+            // Use composite ID for cart items to differentiate sizes
+            const cartItemId = `${id}-${size}`;
+            const existing = cart.find(item => item.cartItemId === cartItemId);
+            
+            if (existing) {
+                existing.qty += 1;
+            } else {
+                cart.push({ ...product, cartItemId, size, qty: 1 });
+            }
+
+            saveCart();
+            updateCartUI();
+            
+            // Badge bump animation
+            const badge = document.getElementById('cartCountBadge');
+            badge.classList.add('scale-125');
+            setTimeout(() => badge.classList.remove('scale-125'), 200);
+            
+            showToast(`"${product.title}" (Tam: ${size}) adicionado à sacola!`);
+        }
+
+        function removeFromCart(cartItemId) {
+            cart = cart.filter(item => item.cartItemId !== cartItemId);
+            saveCart();
+            updateCartUI();
+        }
+
+        function changeQty(cartItemId, delta) {
+            const item = cart.find(i => i.cartItemId === cartItemId);
+            if (!item) return;
+            item.qty += delta;
+            if (item.qty <= 0) {
+                removeFromCart(cartItemId);
+            } else {
+                saveCart();
+                updateCartUI();
+            }
+        }
+
+        function saveCart() {
+            localStorage.setItem('cafofo_cart', JSON.stringify(cart));
+            localStorage.setItem('cafofo_discount', discountPercent);
+            localStorage.setItem('cafofo_coupon', activeCoupon);
+        }
+
+        function updateCartUI() {
+            const cartItemsContainer = document.getElementById('cartItemsContainer');
+            const totalQty = cart.reduce((acc, item) => acc + item.qty, 0);
+            
+            document.getElementById('cartCountBadge').innerText = totalQty;
+
+            if (cart.length === 0) {
+                cartItemsContainer.innerHTML = `
+                    <div class="text-center py-12 text-zinc-400 space-y-3 h-full flex flex-col justify-center">
+                        <i class="fa-solid fa-bag-shopping text-4xl mb-2"></i>
+                        <p class="text-sm">Sua sacola está vazia.</p>
+                        <button onclick="closeCart(); navigateTo('shop');" class="text-xs font-bold text-zinc-900 underline mt-4 hover:text-red-700">Explorar catálogo</button>
+                    </div>
+                `;
+            } else {
+                cartItemsContainer.innerHTML = cart.map(item => `
+                    <div class="flex gap-4 items-center bg-zinc-50 p-3 rounded-xl border border-zinc-200 shadow-sm relative animate-fade-in">
+                        <img src="${item.image}" class="w-20 h-24 object-cover rounded-lg">
+                        <div class="flex-grow">
+                            <h4 class="text-[13px] font-bold text-zinc-900 leading-tight pr-4">${item.title}</h4>
+                            <p class="text-[10px] text-zinc-500 uppercase mt-0.5 tracking-wider">Tamanho: <span class="font-bold text-zinc-700">${item.size}</span></p>
+                            <p class="text-xs font-semibold text-zinc-700 mt-1">R$ ${item.price.toFixed(2).replace('.', ',')}</p>
+                            
+                            <div class="flex items-center gap-3 mt-2.5">
+                                <button onclick="changeQty('${item.cartItemId}', -1)" class="w-7 h-7 bg-white border border-zinc-300 rounded text-xs hover:border-black transition"><i class="fa-solid fa-minus text-[10px]"></i></button>
+                                <span class="text-xs font-bold w-4 text-center">${item.qty}</span>
+                                <button onclick="changeQty('${item.cartItemId}', 1)" class="w-7 h-7 bg-white border border-zinc-300 rounded text-xs hover:border-black transition"><i class="fa-solid fa-plus text-[10px]"></i></button>
+                            </div>
+                        </div>
+                        <button onclick="removeFromCart('${item.cartItemId}')" class="absolute top-3 right-3 text-zinc-400 hover:text-red-600 transition" aria-label="Remover item">
+                            <i class="fa-solid fa-trash-can text-sm"></i>
+                        </button>
+                    </div>
+                `).join('');
+            }
+
+            // Calculate Totals
+            const subtotal = cart.reduce((acc, item) => acc + (item.price * item.qty), 0);
+            const discount = subtotal * (discountPercent / 100);
+            const total = subtotal - discount;
+
+            document.getElementById('cartSubtotal').innerText = 'R$ ' + subtotal.toFixed(2).replace('.', ',');
+            document.getElementById('cartDiscount').innerText = '- R$ ' + discount.toFixed(2).replace('.', ',');
+            document.getElementById('cartTotal').innerText = 'R$ ' + total.toFixed(2).replace('.', ',');
+
+            // Show active coupon label
+            const couponLabel = document.getElementById('activeCouponLabel');
+            if(activeCoupon && discountPercent > 0) {
+                couponLabel.innerText = activeCoupon;
+                couponLabel.classList.remove('hidden');
+                document.getElementById('couponInput').value = activeCoupon;
+            } else {
+                couponLabel.classList.add('hidden');
+                document.getElementById('couponInput').value = '';
+            }
+        }
+
+        function applyCoupon() {
+            const input = document.getElementById('couponInput').value.trim().toUpperCase();
+            if(!input && activeCoupon) {
+                // Clear coupon
+                discountPercent = 0;
+                activeCoupon = '';
+                saveCart();
+                updateCartUI();
+                showToast('Cupom removido.');
+                return;
+            }
+
+            if (input === 'VERMELHO15' || input === 'PRIMEIRA10') {
+                discountPercent = input === 'VERMELHO15' ? 15 : 10;
+                activeCoupon = input;
+                saveCart();
+                updateCartUI();
+                showToast(`Cupom ${input} aplicado com sucesso!`);
+            } else {
+                showToast('Cupom inválido. Tente VERMELHO15');
+            }
+        }
+
+        function applyEditorialCoupon() {
+            document.getElementById('couponInput').value = 'VERMELHO15';
+            applyCoupon();
+            openCart();
+        }
+
+        function openCart() {
+            const drawer = document.getElementById('cartDrawer');
+            const content = document.getElementById('cartDrawerContent');
+            drawer.classList.remove('hidden');
+            // Allow display block to render before animating transform
+            setTimeout(() => {
+                content.classList.remove('translate-x-full');
+            }, 10);
+        }
+
+        function closeCart() {
+            const drawer = document.getElementById('cartDrawer');
+            const content = document.getElementById('cartDrawerContent');
+            content.classList.add('translate-x-full');
+            setTimeout(() => {
+                drawer.classList.add('hidden');
+            }, 300); // Matches the duration-300 tailwind class
+        }
+
+        function closeCartOnOutsideClick(event) {
+            if(event.target.id === 'cartDrawer') {
+                closeCart();
+            }
+        }
+
+        // Global Keyboard accessibility
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                if(!document.getElementById('productModal').classList.contains('hidden')) {
+                    closeProductModal();
+                }
+                if(!document.getElementById('cartDrawer').classList.contains('hidden')) {
+                    closeCart();
+                }
+            }
+        });
+
+        function toggleMobileMenu() {
+            document.getElementById('mobileMenu').classList.toggle('hidden');
+        }
+
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toastMsg').innerText = msg;
+            toast.classList.remove('hidden');
+            setTimeout(() => {
+                toast.classList.add('hidden');
+            }, 3500);
+        }
+
+        function handleSearch(query) {
+            if (!query.trim()) {
+                if(document.getElementById('page-shop').classList.contains('hidden')) {
+                   // User cleared search outside shop page, do nothing
+                } else {
+                    renderCatalog('all');
+                }
+                return;
+            }
+            
+            const catalogContainer = document.getElementById('catalogGrid');
+            if(!catalogContainer) return;
+            
+            const filtered = products.filter(p => 
+                p.title.toLowerCase().includes(query.toLowerCase()) || 
+                p.description.toLowerCase().includes(query.toLowerCase()) ||
+                p.tag.toLowerCase().includes(query.toLowerCase())
+            );
+
+            catalogContainer.innerHTML = filtered.length > 0 ? filtered.map(p => `
+                <div class="bg-white rounded-xl overflow-hidden shadow-sm border border-zinc-200 flex flex-col group animate-fade-in">
+                    <div class="relative overflow-hidden aspect-[4/5] cursor-pointer" onclick="openProductModal('${p.id}')">
+                        <img src="${p.image}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                    </div>
+                    <div class="p-4 flex flex-col justify-between flex-grow">
+                        <h3 class="font-editorial text-lg font-bold leading-tight cursor-pointer hover:text-red-700 transition" onclick="openProductModal('${p.id}')">${p.title}</h3>
+                        <div class="flex justify-between items-end mt-4 pt-3 border-t border-zinc-100">
+                            <p class="font-bold text-zinc-900">R$ ${p.price.toFixed(2).replace('.', ',')}</p>
+                            <button onclick="quickAddToCart('${p.id}')" class="text-zinc-500 hover:text-black">
+                                <i class="fa-solid fa-cart-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `).join('') : '<div class="col-span-full text-center py-12"><i class="fa-solid fa-magnifying-glass text-zinc-300 text-3xl mb-3"></i><p class="text-sm text-zinc-500">Nenhum look encontrado com esse termo.</p></div>';
+        }
+
+        function handleSubscribe(e) {
+            e.preventDefault();
+            showToast('Obrigada! Você agora faz parte do nosso clube VIP.');
+            e.target.reset();
+        }
+
+        function checkout() {
+            if (cart.length === 0) {
+                showToast('Sua sacola está vazia.');
+                return;
+            }
+            showToast('Pedido gerado! Redirecionando para o pagamento...');
+            setTimeout(() => {
+                cart = [];
+                discountPercent = 0;
+                activeCoupon = '';
+                saveCart();
+                updateCartUI();
+                closeCart();
+            }, 2500);
+        }
+
+        // Add custom Tailwind animations inline for JS elements
+        document.head.insertAdjacentHTML("beforeend", `<style>
+            .animate-fade-in { animation: fadeIn 0.4s ease-out forwards; }
+            @keyframes fadeIn {
+                from { opacity: 0; transform: translateY(10px); }
+                to { opacity: 1; transform: translateY(0); }
+            }
+        </style>`);
+
+        // Initial Load setup
+        window.onload = function() {
+            renderCatalog('all');
+            updateCartUI(); // Load saved cart from localStorage
+        };
+    </script>
+</body>
+</html>
+```
